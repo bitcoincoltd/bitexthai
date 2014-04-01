@@ -10,7 +10,7 @@ class bitexthai
 		$mt = explode(' ', microtime());
 		$this->nonce = $mt[1].substr($mt[0], 2, 6);
 		
-		$this->signature = base64_encode(hash('sha256', $api_key.$this->nonce.$api_secret));
+		$this->signature = hash('sha256', $api_key.$this->nonce.$api_secret);
 		if($twofa != ''){
 			$this->twofa = $twofa;
 		}
