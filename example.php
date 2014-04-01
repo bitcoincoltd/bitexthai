@@ -8,7 +8,7 @@ $test = 'deposit';
 
 switch($test){
 	case 'order':
-		if($bitexthai->order(1, 'buy', .0589, 0.0024)){
+		if($bitexthai->order(1, 'buy', .0589, 0.0024)){  // Currency Pairing ID, Buy/Sell, Amount, Rate
 			$order_id = $bitexthai->msg;
 			echo 'Order has been placed! Order ID: '.$order_id;
 		}else{
@@ -16,7 +16,7 @@ switch($test){
 		}
 	break;
 	case 'cancel':
-		if($bitexthai->cancel(1, 11)){
+		if($bitexthai->cancel(1, 11)){ // Currency Pairing ID, Order ID
 			echo 'Order Cancel';
 		}else{
 			echo 'Failed: '.$bitexthai->msg;
@@ -51,7 +51,7 @@ switch($test){
 		}
 	break;
 	case 'withdraw':
-		if($withdraw = $bitexthai->withdraw('BTC',.59546, '14oPLjoUQ2NrKgKbnaZZkLcky2d5UuhBKd')){
+		if($withdraw = $bitexthai->withdraw('BTC',.59546, '14oPLjoUQ2NrKgKbnaZZkLcky2d5UuhBKd')){ // Currency, Amount, Address
 			echo 'Done, withdrawal ID: '.$withdraw;
 		}else{
 			echo 'Failed: '.$bitexthai->msg;
