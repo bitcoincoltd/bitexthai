@@ -2,7 +2,7 @@
 class bitexthai
 {
 	var $api_key, $nonce, $signature, $twofa;
-	var $api_url = 'https://exchange.bitcoin.co.th/api/';
+	var $api_url = 'https://bx.in.th/api/';
 	var $msg;
 	function __construct($api_key, $api_secret, $twofa=''){
 		$this->api_key = $api_key;
