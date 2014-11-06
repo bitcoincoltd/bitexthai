@@ -25,7 +25,7 @@ class bitexthai
 				$data['twofa'] = $this->twofa;
 			}
 			
-			curl_setopt ( $ch, CURLOPT_URL, $this->api_url.$endpoint);
+			curl_setopt ( $ch, CURLOPT_URL, $this->api_url.$endpoint.'/');
 			curl_setopt ( $ch, CURLOPT_FOLLOWLOCATION, false );
 			curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt ( $ch, CURLOPT_CONNECTTIMEOUT, 5 );
@@ -35,6 +35,7 @@ class bitexthai
 			curl_setopt ( $ch, CURLOPT_POSTFIELDS,$data);
 			
 			$str = curl_exec ( $ch );
+			
 			curl_close ( $ch );
 			return json_decode($str);
 		}
@@ -108,6 +109,117 @@ class bitexthai
 			return $withdraw->withdrawal_id;
 		}else{
 			$this->msg = $withdraw->error;
+			return false;
+		}
+	}
+	
+	function issue_option($strike_price, $option_volume, $ask_price, $pairing_id=1, $option_type='call', $expire_date='', $qty=1){
+		if($expire_date==''){
+			$expire_date = date("Y-m-d",strtotime("Next Friday"));
+		}
+		$issue = $this->curl(array('type' => $option_type, 
+									  'strike' => $strike_price, 
+									  'ask' => $ask_price,
+									  'volume' => $option_volume,
+									  'pairing' => $pairing_id,
+									  'expire' => date("Y-m-d",strtotime($expire_date)),
+									  'qty' => $qty
+									  ),'option-issue');
+		if($issue->success){
+			return $issue->option_id;
+		}else{
+			$this->msg = $issue->error;
+			return false;
+		}
+	}
+	
+	function cancel_option($option_id){
+		$cancel = $this->curl(array('option_id' => $option_id),'option-cancel');
+		if($cancel->success){
+			return true;
+		}else{
+			$this->msg = $cancel->error;
+			return false;
+		}
+	}
+	
+	function get_issues($pairing_id, $expire_date='', $type=''){
+		$params = array('pairing' => $pairing_id);
+		if($expire_date != ''){
+			$params['expire'] = date("Y-m-d",strtotime($expire_date));
+		}
+		if(in_array($type,array('put','call'))){
+			$params['type'] = $type;
+		}
+		return $this->curl($params,'option-myissue');
+	}
+	
+	function bid_option($option_id, $bid, $qty=1, $fill_kill = false){
+		$params = array('option_id' => $option_id,
+						'bid' => $bid,
+						'qty' => $qty,
+						'fill_kill' => ($fill_kill ? 1 : 0));
+		$bid = $this->curl($params,'option-bid');
+		if($bid->success){
+			return $bid;
+		}else{
+			$this->msg = $bid->error;
+			return false;
+		}
+	}
+	
+	function get_bids($pairing_id, $expire_date='', $type=''){
+		$params = array('pairing' => $pairing_id);
+		if($expire_date != ''){
+			$params['expire'] = date("Y-m-d",strtotime($expire_date));
+		}
+		if(in_array($type,array('put','call'))){
+			$params['type'] = $type;
+		}
+		return $this->curl($params,'option-mybid');
+	}
+	
+	function get_options($pairing_id, $expire_date='', $type=''){
+		$params = array('pairing' => $pairing_id);
+		if($expire_date != ''){
+			$params['expire'] = date("Y-m-d",strtotime($expire_date));
+		}
+		if(in_array($type,array('put','call'))){
+			$params['type'] = $type;
+		}
+		return $this->curl($params,'option-myoptions');
+	}
+	
+	function sell_option($option_id, $ask){
+		$params = array('option_id' => $option_id,
+						'ask' => $ask);
+		$sell = $this->curl($params,'option-sell');
+		if($sell->success){
+			return $sell;
+		}else{
+			$this->msg = $sell->error;
+			return false;
+		}
+	}
+	
+	function exercise_option($option_id){
+		$params = array('option_id' => $option_id);
+		$exercise = $this->curl($params,'option-exercise');
+		if($exercise->success){
+			return true;
+		}else{
+			$this->msg = $exercise->error;
+			return false;
+		}
+	}
+	
+	function option_history($pairing_id){
+		$params = array('pairing' => $pairing_id);
+		$history = $this->curl($params,'option-history');
+		if($history->success){
+			return $history;
+		}else{
+			$this->msg = $history->error;
 			return false;
 		}
 	}
