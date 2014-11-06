@@ -1,3 +1,9 @@
 This class will allow you to interact with the Bitcoin Exchange Thailand.
 
-View API documation available here: https://exchange.bitcoin.co.th/info/api/
+View API documation available here: https://bx.in.th/info/api/
+
+Changelog:
+
+2014-11-06
+Added "Options" functionality.
+NOTE: These functions are not yet available on the live server but will be added within the next few months.
