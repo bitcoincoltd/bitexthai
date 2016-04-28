@@ -4,6 +4,9 @@ View API documation available here: https://bx.in.th/info/api/
 
 Changelog:
 
+2016-04-28
+Added bill payment functionality
+
 2014-11-06
 Added "Options" functionality.
 NOTE: These functions are not yet available on the live server but will be added within the next few months.

@@ -223,5 +223,33 @@ class bitexthai
 			return false;
 		}
 	}
+	function listBillGroups(){
+		$billers = $this->curl('','billgroup');
+		if(!$billers->success){
+			$this->msg = $billers->error;
+			return false;
+		}
+		return $billers->groups;
+	}
+	
+	function listBillers($group_id=1){
+		$billers = $this->curl(array('group_id' => 1),'biller');
+		if(!$billers->success){
+			$this->msg = $billers->error;
+			return false;
+		}
+		return $billers->providers;
+	}
+	
+	function billPayment($provider,$amount, $account){
+		$params = array('biller' => (int)$provider,
+						'amount' => $amount,
+						'account' => $account);
+		$bill = $this->curl($params,'billpay');
+		if(!$bill->success){
+			$this->msg = $bill->error;
+			return false;
+		}
+		return $bill->withdrawal_id;
+	}
 }
-?>

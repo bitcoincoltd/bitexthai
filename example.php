@@ -115,5 +115,19 @@ switch($test){
 			echo 'Failed: '.$bitexthai->msg;
 		}
 	break;
+	case 'list_billers':
+		if($billers = $bitexthai->listBillers()){
+			print_r($billers);
+		}else{
+			echo 'Failed: '.$bitexthai->msg;
+		}
+	break;
+	case 'bill_pay':
+		if($billers = $bitexthai->billPayment(2,50,'0868911218')){ // Topup Happy DTAC 50baht to phone 0868911218
+			print_r($billers);
+		}else{
+			echo 'Failed: '.$bitexthai->msg;
+		}
+	break;
 }
 ?>
