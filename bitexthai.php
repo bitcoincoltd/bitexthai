@@ -1,22 +1,28 @@
 <?php
 class bitexthai
 {
-	var $api_key, $nonce, $signature, $twofa;
+	var $api_key, $api_secret, $nonce, $signature, $twofa;
 	var $api_url = 'https://bx.in.th/api/';
 	var $msg;
 	function __construct($api_key, $api_secret, $twofa=''){
-		$this->api_key = $api_key;
-		
-		$mt = explode(' ', microtime());
-		$this->nonce = $mt[1].substr($mt[0], 2, 6);
-		
-		$this->signature = hash('sha256', $api_key.$this->nonce.$api_secret);
+		$this->api_key    = $api_key;
+		$this->api_secret = $api_secret;
+
 		if($twofa != ''){
 			$this->twofa = $twofa;
 		}
 	}
+
+	function generate_signature()
+	{
+		$mt = explode(' ', microtime());
+		$this->nonce = $mt[1].substr($mt[0], 2, 6);
+		$this->signature = hash('sha256', $this->api_key.$this->nonce.$this->api_secret);	
+	}
 	
 	function curl($data='', $endpoint=''){
+		$this->generate_signature();
+		
 		if($ch = curl_init ()){
 			$data['key'] = $this->api_key;
 			$data['nonce'] = $this->nonce;
